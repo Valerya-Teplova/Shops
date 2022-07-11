@@ -1,0 +1,6 @@
+INSERT INTO Product(ProductName, Price, Category, Count, Description)
+VALUES ('Помидоры', 100, 'овощи', 30, null);
+INSERT INTO Product(ProductName, Price, Category, Count, Description)
+VALUES ('Огурцы', 100, 'овощи', 50, null);
+INSERT INTO Product(ProductName, Price, Category, Count, Description)
+VALUES ('Хлеб', 10, 'хлеб', 30, null);
