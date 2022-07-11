@@ -49,12 +49,8 @@ namespace ShopIS.ViewModel
         {
             get { return _responseMessage; }
             set { SetProperty(ref _responseMessage, value); }
-        }
-
-
+        }        
         
-        
-
         #region [Create Product Properties]
         private string _productName;
         public string ProductName
@@ -83,13 +79,7 @@ namespace ShopIS.ViewModel
             get { return _count; }
             set { SetProperty(ref _count, value); }
         }
-
-        //private string _description;
-        //public string Description
-        //{
-        //    get { return _description; }
-        //    set { SetProperty(ref _description, value); }
-        //}
+        
         #endregion
         private bool _isShowForm;
         public bool IsShowForm
@@ -97,7 +87,7 @@ namespace ShopIS.ViewModel
             get { return _isShowForm; }
             set { SetProperty(ref _isShowForm, value); }
         }
-        private string _showPostMessage = "Товар добавлен в список товаров";
+        private string _showPostMessage = "";
         public string ShowPostMessage
         {
             get { return _showPostMessage; }
@@ -137,9 +127,7 @@ namespace ShopIS.ViewModel
             if (productDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 Products = productDetails.Result.Content.ReadAsAsync<List<Product>>().Result;
-
                 IsLoadData = true;
-
             }
         }
 
@@ -156,11 +144,11 @@ namespace ShopIS.ViewModel
             var productDetails = WebAPI.PostCall(API_URI.products, newProduct);
             if (productDetails.Result.StatusCode == System.Net.HttpStatusCode.Created)
             {
-                ShowPostMessage = newProduct.ProductName + "'s details has successfully been added!";
+                ShowPostMessage = newProduct.ProductName + " Успешно добавлен";
             }
             else
             {
-                ShowPostMessage = "Failed to update" + newProduct.ProductName + "'s details.";
+                ShowPostMessage = "Не удалось добавить " + newProduct.ProductName ;
             }
         }
 
@@ -169,9 +157,10 @@ namespace ShopIS.ViewModel
             var employeeDetails = WebAPI.PutCall(API_URI.products + "?id=" + product.IDProduct, product);
             if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                ResponseMessage = product.ProductName + "'s details has successfully been updated!";
+                ShowPostMessage = product.ProductName + "успешно изменен";
+                GetProductDetails();
             }
-            else ResponseMessage = "Failed to update" + product.ProductName + "'s details.";
+            else ShowPostMessage = "Не удалось изменить " + product.ProductName;
            
         }
 
@@ -180,10 +169,10 @@ namespace ShopIS.ViewModel
             var employeeDetails = WebAPI.DeleteCall(API_URI.products + "?id=" + product.IDProduct);
             if (employeeDetails.Result.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                ResponseMessage = product.ProductName + "'s details has successfully been deleted!";
+                ShowPostMessage = product.ProductName + " успешно удален";
+                GetProductDetails();
             }
-            else ResponseMessage = "Failed to delete" + product.ProductName + "'s details.";
-           
+            else ShowPostMessage = "Не удалось удалить " + product.ProductName;           
         }
         #endregion
     }

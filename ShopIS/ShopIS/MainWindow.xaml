@@ -6,20 +6,25 @@
         xmlns:vm ="clr-namespace:ShopIS.ViewModel"
         xmlns:local="clr-namespace:ShopIS"
         mc:Ignorable="d"
-        Title="Магазин" Height="387" Width="712">
+        Title="Магазин" Height="607" Width="769">
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="VM"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
-    <Grid x:Name="MainGrid" DataContext="{Binding Source={StaticResource VM}}" HorizontalAlignment="Center">
-        <Grid.RowDefinitions>
+    <Grid x:Name="MainGrid" DataContext="{Binding Source={StaticResource VM}}" HorizontalAlignment="Center" Width="558">
+        <Grid.RowDefinitions>            
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
-        <StackPanel x:Name="StackPanelGetPost"  Orientation="Horizontal"  HorizontalAlignment="Center" Margin="0 10 0 0">
-            <Button x:Name="ButtonGet" Command="{Binding GetButtonClicked}"  Height="20" Width="120" Content="GET"/>
-            <Button x:Name="ButtonPost" Command="{Binding ShowRegistrationForm}" Margin="10 0 0 0" Height="20" Width="120" Content="Register Product" VerticalAlignment="Bottom"/>
+        <StackPanel>
+            <TextBlock x:Name="TextBlockResponse" Text="{Binding ResponseMessage}" HorizontalAlignment="Center" Margin="20 8 0 0" Grid.Row="2"
+                       FontSize="18" FontFamily="Comic Sans MS"/>
+            <TextBlock x:Name="TextBlockMessage" FontSize="16" Text="{Binding ShowPostMessage}" FontFamily="Comic Sans MS" HorizontalAlignment="Center" Margin="10"/>
+        </StackPanel>
+        <StackPanel x:Name="StackPanelGetPost" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 70 0 0">
+            <Button x:Name="ButtonGet" FontSize="14" Command="{Binding GetButtonClicked}" FontFamily="Georgia" Height="20" Width="140" Content="Запустить магазин"/>
+            <Button x:Name="ButtonPost" FontSize="14" Command="{Binding ShowRegistrationForm}" FontFamily="Georgia" Margin="50 0 0 0" Height="20" Width="120" Content="Добавить товар" VerticalAlignment="Bottom"/>
         </StackPanel>
         <Grid x:Name="GridProductDetails" Visibility="{Binding IsLoadData, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="1">
             <Grid.RowDefinitions>
@@ -27,23 +32,25 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <DataGrid x:Name="DataGridProduct" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Margin="0 10 0 0" Width="310">
+            <DataGrid x:Name="DataGridProduct" FontSize="14" ItemsSource="{Binding Products}" FontFamily="Georgia" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Margin="0 10 0 0" Width="440">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="ColumnProductName" Header="Name" Binding="{Binding ProductName}"/>
-                    <DataGridTextColumn x:Name="ColumnCategory" Header="Category" Binding="{Binding Category}"/>
-                    <DataGridTextColumn x:Name="ColumnPrice" Header="Price" Binding="{Binding Price}"/>
-                    <DataGridTextColumn x:Name="ColumnCount" Header="Count" Binding="{Binding Count}"/>
+                    <DataGridTextColumn x:Name="ColumnProductName" Header="Наименование продукта" FontSize="14" Binding="{Binding ProductName}"/>
+                    <DataGridTextColumn x:Name="ColumnCategory" Header="Категория" FontSize="14" Binding="{Binding Category}"/>
+                    <DataGridTextColumn x:Name="ColumnPrice" Header="Стоимость" FontSize="14" Binding="{Binding Price}"/>
+                    <DataGridTextColumn x:Name="ColumnCount" Header="Количество" FontSize="14" Binding="{Binding Count}"/>
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel x:Name="StackPanelPutDelete" HorizontalAlignment="Center" Margin="0 10 0 0" Orientation="Horizontal" Grid.Row="1">
-                <Button x:Name="ButtonPut" Command="{Binding PutButtonClicked}" CommandParameter="{Binding SelectedProduct}" Height="20" Width="120" Content="Update"/>
-                <Button x:Name="ButtonDelete" Command="{Binding DeleteButtonClicked}" CommandParameter="{Binding SelectedProduct}" Margin="10 0 0 0" Height="20" Width="120" Content="Delete"/>
+                <Button x:Name="ButtonPut" Command="{Binding PutButtonClicked}" FontFamily="Georgia" CommandParameter="{Binding SelectedProduct}" Height="20" Width="160" Content="Редактирование продукта"/>
+                <Button x:Name="ButtonDelete" Command="{Binding DeleteButtonClicked}" CommandParameter="{Binding SelectedProduct}" Margin="10 0 0 0"
+                        Height="20" Width="120" Content="Удаление продукта" FontFamily="Georgia"/>
             </StackPanel>
-            <TextBlock x:Name="TextBlockResponse" Text="{Binding ResponseMessage}" HorizontalAlignment="Center" Margin="20 8 0 0" Grid.Row="2" />
+            
         </Grid>
 
         <Grid x:Name="GridCreateNewProduct" 
-              Visibility="{Binding IsShowForm, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2">
+              Visibility="{Binding IsShowForm, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" HorizontalAlignment="Center"
+              >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -57,19 +64,20 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="LabelProductID" Content="Product:" Margin="0 10 0 0"/>
-            <Label x:Name="LabelProductName" Content="Product Name:"  Grid.Row="1"/>
-            <Label x:Name="LabelCategoryProduct" Content="Category:" Grid.Row="2"/>
-            <Label x:Name="LabelPrice" Content="Price:" Grid.Row="3"/>
-            <Label x:Name="LabelCount" Content="Count:" Grid.Row="4"/>
-            <TextBox x:Name="TextBoxProductID" Text="" Height="20" Width="150" Grid.Column="1"/>
-            <TextBox x:Name="TextBoxProductName" Text="{Binding ProductName}" Height="20" Width="150" Grid.Row="1" Grid.Column="1"/>
-            <TextBox x:Name="TextBoxCategory" Text="{Binding Category}" Height="20" Width="150" Grid.Row="2" Grid.Column="1"/>
-            <TextBox x:Name="TextBoxPrice" Text="{Binding Price}" Height="20" Width="150" Grid.Row="3" Grid.Column="1"/>
-            <TextBox x:Name="TextBoxCount" Text="{Binding Count}" Height="20" Width="150" Grid.Column="1" Grid.Row="4"/>
-            <Button x:Name="ButtonAdd" Height="20" Width="100" Content="POST" HorizontalAlignment="Center" Margin="20 10 0 0" 
-                    Command="{Binding PostButtonClick}" CommandParameter="{Binding CreateProduct}" Grid.Row="5" Grid.ColumnSpan="2"/>
-            <TextBlock x:Name="TextBlockMessage" Text="{Binding ShowPostMessage}" HorizontalAlignment="Center" Margin="20 8 0 0" Grid.Row="6" Grid.ColumnSpan="2"/>
+            <Label x:Name="LabelProductID" Content="Добавление товара" FontSize="18" FontFamily="Georgia" Margin="0 10 0 0" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
+            <Label x:Name="LabelProductName" Content="Наименование:" FontSize="14" FontFamily="Georgia" Grid.Row="1"/>
+            <Label x:Name="LabelCategoryProduct" Content="Категория:" FontSize="14" FontFamily="Georgia" Grid.Row="2"/>
+            <Label x:Name="LabelPrice" Content="Стоимость:" Grid.Row="3" FontSize="14" FontFamily="Georgia"/>
+            <Label x:Name="LabelCount" Content="Количество:" Grid.Row="4" FontSize="14" FontFamily="Georgia"/>
+
+            <TextBox x:Name="TextBoxProductName" Text="{Binding ProductName}" FontSize="14" FontFamily="Georgia" Height="20" Width="150" Grid.Row="1" Grid.Column="1"/>
+            <TextBox x:Name="TextBoxCategory" Text="{Binding Category}" FontSize="14" FontFamily="Georgia" Height="20" Width="150" Grid.Row="2" Grid.Column="1"/>
+            <TextBox x:Name="TextBoxPrice" Text="{Binding Price}" FontSize="14" FontFamily="Georgia" Height="20" Width="150" Grid.Row="3" Grid.Column="1"/>
+            <TextBox x:Name="TextBoxCount" Text="{Binding Count}" FontSize="14" FontFamily="Georgia" Height="20" Width="150" Grid.Column="1" Grid.Row="4"/>
+            <Button x:Name="ButtonAdd" Height="20" Width="100" FontFamily="Georgia" Content="Добавить" HorizontalAlignment="Center" Margin="20 10 0 0" 
+                    Command="{Binding PostButtonClick}" FontSize="14" CommandParameter="{Binding CreateProduct}" Grid.Row="5" Grid.ColumnSpan="2"/>
+            
         </Grid>
+        
     </Grid>
 </Window>

@@ -1,6 +1,5 @@
 ﻿using System;
 using DataAccessLayer;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,37 +10,34 @@ namespace API.Controllers
     public class ProductController : ApiController
     {
 
+        [System.Web.Http.Route("api/Product")]
         [HttpGet]
-        [System.Web.Http.Route("api/Products/All")]
-        public IHttpActionResult Get()
-        {
-            using (StoreEntities entities = new StoreEntities())
-            {
-                 
-                var results = entities.Product.ToList();
-
-                //if (results == null)
-                //{
-                //    return NotFound();
-                //}
-
-                return Ok(results);
-            }
-        }
-       
-        [HttpGet]
-        public IHttpActionResult Get(int id)
+        public IHttpActionResult Get(int id = -1)
         {
             try
             {
                 using (StoreEntities entities = new StoreEntities())
                 {
-                    var emp = entities.Product.First(em => em.IDProduct == id);
-                    if (emp != null)
+                    if (id == -1)
                     {
-                        return Ok(emp);
+                        var results = entities.Product.ToList();
+
+                        if (results == null)
+                        {
+                            return NotFound();
+                        }
+
+                        return Ok(results);
                     }
-                    else return Content(HttpStatusCode.NotFound, "Product with Id: " + id + " not found");
+                    else
+                    {
+                        var product = entities.Product.First(em => em.IDProduct == id);
+                        if (product != null)
+                        {
+                            return Ok(product);
+                        }
+                        else return Content(HttpStatusCode.NotFound, "Product with Id: " + id + " not found");
+                    }
                 }
             }
             catch (Exception ex)
@@ -50,7 +46,7 @@ namespace API.Controllers
 
             }
         }
-
+        [System.Web.Http.Route("api/Product")]
         [HttpPost]
         public HttpResponseMessage Post([FromBody] Product product)
         {
@@ -70,28 +66,29 @@ namespace API.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
-
+        [System.Web.Http.Route("api/Product")]
         [HttpPut]
-        public HttpResponseMessage Put(int id, [FromBody] Product emp)
+        public HttpResponseMessage Put(int id, [FromBody] Product product)
         {
             try
             {
                 using (StoreEntities entities = new StoreEntities())
                 {
-                    var product = entities.Product.Where(em => em.IDProduct == id).First();
-                    if (product != null)
+                    var result = entities.Product.Where(pr => pr.IDProduct == id).First();
+                    if (result != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(emp.ProductName))
-                            product.ProductName = emp.ProductName;
-                        if (!string.IsNullOrWhiteSpace(emp.Price+""))
-                            product.Price = emp.Price;
-                        if(!string.IsNullOrWhiteSpace(emp.Category))
-                            product.Category = emp.Category;
-                        if(!string.IsNullOrWhiteSpace(emp.Count+""))
-                            product.Count = emp.Count;
-                        if (!string.IsNullOrWhiteSpace(emp.Description))
-                            product.Description = emp.Description;
-                        
+ 
+                        if (!string.IsNullOrWhiteSpace(product.ProductName))
+                            product.ProductName = product.ProductName;                        
+                        if (!string.IsNullOrWhiteSpace(product.Price.ToString()))                        
+                            product.Price = product.Price;                        
+                        if (!string.IsNullOrWhiteSpace(product.Category))
+                            product.Category = product.Category;
+                        if (!string.IsNullOrWhiteSpace(product.Count.ToString()))
+                            product.Count = product.Count;
+                        if (!string.IsNullOrWhiteSpace(product.Description))
+                            product.Description = product.Description;
+ 
 
                         entities.SaveChanges();
                         var res = Request.CreateResponse(HttpStatusCode.OK, "product with id " + id + " updated");
@@ -110,18 +107,20 @@ namespace API.Controllers
             }
         }
 
+        [System.Web.Http.Route("api/Product")]
         [HttpDelete]
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(int id=0)
         {
             try
             {
                 using (StoreEntities entities = new StoreEntities())
                 {
-                    var product = entities.Product.Where(emp => emp.IDProduct == id).First();
-                    if (product != null)
+                    var result = entities.Product.First(product => product.IDProduct == id);
+                    if (result != null)
                     {
-                        entities.Product.Remove(product);
+                        entities.Product.Remove(result);
                         entities.SaveChanges();
+
                         return Request.CreateResponse(HttpStatusCode.OK, "Product with id " + id + " Deleted");
                     }
                     else
